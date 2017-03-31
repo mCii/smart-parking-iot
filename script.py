@@ -8,15 +8,25 @@ cursor = dbConn.cursor()
 while(1):
 	data = arduino.readline()
 	dd = data.split()
-	reference=dd[0]
-	state=dd[1]
-	print reference + " ---- " + state	#for testing 
+	reference1 = dd[0]
+	state1 = dd[1]
+	reference2 = dd[2]
+	state2 = dd[3]
+	print reference1 + " ---- " + state1 + "/"+ reference2 + "----"+ state2	for testing 
 #	cursor.execute("INSERT into sensorState(reference, state) VALUES (%s,%s)", (reference, state)) 
-#	cursor.execute(""" 
-#		UPDATE sensorState 		#updating the database
-#		SET state= %s 
-#		WHERE reference = %s"
-#	""", (state, reference))
+	cursor.execute(""" 
+		UPDATE sensorState 	
+		SET state= %s 
+		WHERE reference = %s
+	""", (state1, reference1))
+	
+	cursor.execute(""" 
+                UPDATE sensorState      
+                SET state= %s 
+                WHERE reference = %s
+        """, (state2, reference2))
+	
+
 	dbConn.commit()
 
 cursor.close()
