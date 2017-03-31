@@ -1,4 +1,16 @@
-This is a smart parking IOT project.
-The python script will read data from serial and insert data in MYSQL.
+# Smart Parking iot
 
-This file will be updated ...
+This project is an implementation of a smart parking using arduino technology.
+
+### Technologies
+
+This project uses a number of open source projects to work properly:
+
+* [Mysql] - database
+* [Python] - scripting language
+* [Arduino] - Open-source electronic prototyping platform
+
+
+### How to use this project ?
+
+This file will be updated soon.
