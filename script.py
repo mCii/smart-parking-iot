@@ -1,32 +1,36 @@
 import serial 
-import MySQLdb
+import json
+import requests
+from datetime import datetime
 
-dbConn = MySQLdb.connect("localhost","root","root","arduino") or die ("could not connect to database");
-device = '/dev/ttyACM0'
+device = 'COM8'
 arduino = serial.Serial(device, 9600)
-cursor = dbConn.cursor()
+
 while(1):
 	data = arduino.readline()
-	dd = data.split()
-	reference1 = dd[0]
-	state1 = dd[1]
-	reference2 = dd[2]
-	state2 = dd[3]
-	print reference1 + " ---- " + state1 + "/"+ reference2 + "----"+ state2	for testing 
-#	cursor.execute("INSERT into sensorState(reference, state) VALUES (%s,%s)", (reference, state)) 
-	cursor.execute(""" 
-		UPDATE sensorState 	
-		SET state= %s 
-		WHERE reference = %s
-	""", (state1, reference1))
-	
-	cursor.execute(""" 
-                UPDATE sensorState      
-                SET state= %s 
-                WHERE reference = %s
-        """, (state2, reference2))
-	
+	data = data.split(" ")
 
-	dbConn.commit()
+	data1 = data[0]
+	data2 = data[1]
 
-cursor.close()
+	refparking = data1[0:4]	
+	
+	reference1 = int(data1[4:7],2)
+	state1 = data1[7:8]
+	
+	reference2 = int(data2[4:7],2)
+	state2 = data2[7:8]
+	print refparking
+	print reference1
+	print state1
+	print reference2
+	print state2
+
+	time = str(datetime.now())
+	time = time[:19]
+
+	url = 'http://ensismartpark.000webhostapp.com/login_register/consumer.php'
+	payload = {"sensor_ref1":reference1,"state1":state1,"ref_parking":refparking,"sensor_ref2":reference2,"state2":state2,"lastupdate":time}
+	
+	response = requests.post(url, data=dict(payload=json.dumps(payload)))
+	print response
